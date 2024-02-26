@@ -1,0 +1,5 @@
+$upload_dir   = wp_upload_dir();
+$rates = 'ding dong';
+$file = fopen( $upload_dir['basedir'].'/debug-rate-b.txt',"a");
+fwrite($file,print_r($rates, true));
+fclose($file);
