@@ -1,0 +1,359 @@
+jQuery(document).ready(function($) {
+  let $articlesParentClass = $('.summary-item-list-container .summary-item-list.sqs-gallery.sqs-gallery-design-autogrid');
+  let $maxLoad = 9;
+
+  function hideArticles() {
+      let i = 0;
+      $('.summary-item-list-container .summary-item-list .summary-item').each(function(item) {
+          if (i > 8) {
+              $(this).css('display', 'none');
+          }
+          i++;
+      });
+  }
+
+  function handleViewMore() {
+      let $allArticles = $('.summary-item-list-container .summary-item-list .summary-item');
+      $allArticles.slice($maxLoad).hide();
+      if ($allArticles.length > $maxLoad) {
+          const $viewMoreButton = $('<button>').attr({
+              'type': 'submit',
+              'name': 'button'
+          }).text('View More');
+          $viewMoreButton.addClass("my-class");
+          $viewMoreButton.attr('style', 'background-color: #d16501; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; position: absolute;left: 44%; bottom: 17%;cursor: pointer');
+          $viewMoreButton.on('click', function() {
+
+              $allArticles.slice($maxLoad).show();
+              $viewMoreButton.hide();
+          });
+          $articlesParentClass.find('.my-class').remove();
+          $articlesParentClass.append($viewMoreButton);
+      }
+  }
+
+  function arialhandleViewMore() {
+    let $allArticless = $('.lzs-category-aerial-photography-view');
+    $allArticless.slice($maxLoad).hide();
+    if ($allArticless.length > $maxLoad) {
+        const $viewMoreButtonn = $('<button>').attr({
+            'type': 'submit',
+            'name': 'button'
+        }).text('View More');
+        $viewMoreButtonn.addClass("arial-my-class");
+        $viewMoreButtonn.attr('style', 'background-color: #d16501; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; position: absolute;left: 44%; bottom: 17%;cursor: pointer');
+        $viewMoreButtonn.on('click', function() {
+            $allArticless.slice($maxLoad).show();
+            $viewMoreButtonn.hide();
+        });
+        $articlesParentClass.find('.arial-my-class').remove();
+        $articlesParentClass.append($viewMoreButtonn);
+      }
+  }
+
+  function eventhandleViewMore() {
+    let $alleventArticless = $('.lzs-category-event-photos-view');
+    $alleventArticless.slice($maxLoad).hide();
+    if ($alleventArticless.length > $maxLoad) {
+        const $EventViewMoreButtonn = $('<button>').attr({
+            'type': 'submit',
+            'name': 'button'
+        }).text('View More');
+        $EventViewMoreButtonn.addClass("event-my-class");
+        $EventViewMoreButtonn.attr('style', 'background-color: #d16501; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; position: absolute;left: 44%; bottom: 17%;cursor: pointer');
+        $EventViewMoreButtonn.on('click', function() {
+            $alleventArticless.slice($maxLoad).show();
+            $EventViewMoreButtonn.hide();
+        });
+        $articlesParentClass.find('.event-my-class').remove();
+        $articlesParentClass.append($EventViewMoreButtonn);
+    }
+  }
+
+  function promotionalhandleViewMore() {
+    let $allPromotionalArticless = $('.lzs-category-promotional-view');
+    $allPromotionalArticless.slice($maxLoad).hide();
+    if ($allPromotionalArticless.length > $maxLoad) {
+        const $PromotionalViewMoreButtonn = $('<button>').attr({
+            'type': 'submit',
+            'name': 'button'
+        }).text('View More');
+        $PromotionalViewMoreButtonn.addClass("promotional-my-class");
+        $PromotionalViewMoreButtonn.attr('style', 'background-color: #d16501; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; position: absolute;left: 44%; bottom: 17%;cursor: pointer');
+        $PromotionalViewMoreButtonn.on('click', function() {
+            $allPromotionalArticless.slice($maxLoad).show();
+            $PromotionalViewMoreButtonn.hide();
+        });
+        $articlesParentClass.find('.promotional-my-class').remove();
+        $articlesParentClass.append($PromotionalViewMoreButtonn);
+    }
+  }
+
+  function stockilehandleViewMore() {
+    let $allStockileArticless = $('.lzs-category-stockpile-measurement-view');
+    $allStockileArticless.slice($maxLoad).hide();
+    if ($allStockileArticless.length > $maxLoad) {
+        const $StockileViewMoreButtonn = $('<button>').attr({
+            'type': 'submit',
+            'name': 'button'
+        }).text('View More');
+        $StockileViewMoreButtonn.addClass("stockile-my-class");
+        $StockileViewMoreButtonn.attr('style', 'background-color: #d16501; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; position: absolute;left: 44%; bottom: 17%;cursor: pointer');
+        $StockileViewMoreButtonn.on('click', function() {
+            $allStockileArticless.slice($maxLoad).show();
+            $StockileViewMoreButtonn.hide();
+        });
+        $articlesParentClass.find('.stockile-my-class').remove();
+        $articlesParentClass.append($StockileViewMoreButtonn);
+    }
+  }
+
+  function roofhandleViewMore() {
+    let $allRoofArticless = $('.lzs-category-roof-inspections-view');
+    $allRoofArticless.slice($maxLoad).hide();
+    if ($allRoofArticless.length > $maxLoad) {
+        const $RoofViewMoreButtonn = $('<button>').attr({
+            'type': 'submit',
+            'name': 'button'
+        }).text('View More');
+        $RoofViewMoreButtonn.addClass("roof-my-class");
+        $RoofViewMoreButtonn.attr('style', 'background-color: #d16501; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; position: absolute;left: 44%; bottom: 17%;cursor: pointer');
+        $RoofViewMoreButtonn.on('click', function() {
+            $allRoofArticless.slice($maxLoad).show();
+            $RoofViewMoreButtonn.hide();
+        });
+        $articlesParentClass.find('.roof-my-class').remove();
+        $articlesParentClass.append($RoofViewMoreButtonn);
+    }
+  }
+  function degreehandleViewMore() {
+    let $allDegreeArticless = $('.lzs-category-360-degree-view');
+    $allDegreeArticless.slice($maxLoad).hide();
+    if ($allDegreeArticless.length > $maxLoad) {
+        const $DegreeViewMoreButtonn = $('<button>').attr({
+            'type': 'submit',
+            'name': 'button'
+        }).text('View More');
+        $DegreeViewMoreButtonn.addClass("360_degree-my-class");
+        $DegreeViewMoreButtonn.attr('style', 'background-color: #d16501; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; position: absolute;left: 44%; bottom: 17%;cursor: pointer');
+        $DegreeViewMoreButtonn.on('click', function() {
+            $allDegreeArticless.slice($maxLoad).show();
+            $DegreeViewMoreButtonn.hide();
+        });
+        $articlesParentClass.find('.360_degree-my-class').remove();
+        $articlesParentClass.append($DegreeViewMoreButtonn);
+    }
+  }
+
+  function groundhandleViewMore() {
+    let $allGroundArticless = $('.lzs-category-ground-photography-view');
+    $allGroundArticless.slice($maxLoad).hide();
+    if ($allGroundArticless.length > $maxLoad) {
+        const $GroundViewMoreButtonn = $('<button>').attr({
+            'type': 'submit',
+            'name': 'button'
+        }).text('View More');
+        $GroundViewMoreButtonn.addClass("ground-my-class");
+        $GroundViewMoreButtonn.attr('style', 'background-color: #d16501; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; position: absolute;left: 44%; bottom: 17%;cursor: pointer');
+        $GroundViewMoreButtonn.on('click', function() {
+            $allGroundArticless.slice($maxLoad).show();
+            $GroundViewMoreButtonn.hide();
+        });
+        $articlesParentClass.find('.ground-my-class').remove();
+        $articlesParentClass.append($GroundViewMoreButtonn);
+    }
+  }
+
+  function commercialhandleViewMore() {
+    let $allCommercialArticless = $('.lzs-category-commercial-services');
+    $allCommercialArticless.slice($maxLoad).hide();
+    if ($allCommercialArticless.length > $maxLoad) {
+        const $CommercialViewMoreButtonn = $('<button>').attr({
+            'type': 'submit',
+            'name': 'button'
+        }).text('View More');
+        $CommercialViewMoreButtonn.addClass("commercial-my-class");
+        $CommercialViewMoreButtonn.attr('style', 'background-color: #d16501; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; position: absolute;left: 44%; bottom: 17%;cursor: pointer');
+        $CommercialViewMoreButtonn.on('click', function() {
+            $allCommercialArticless.slice($maxLoad).show();
+            $CommercialViewMoreButtonn.hide();
+        });
+        $articlesParentClass.find('.commercial-my-class').remove();
+        $articlesParentClass.append($CommercialViewMoreButtonn);
+    }
+  }
+
+  function constructionhandleViewMore() {
+    let $allConstructionArticless = $('.lzs-category-construction-view');
+    $allConstructionArticless.slice($maxLoad).hide();
+    if ($allConstructionArticless.length > $maxLoad) {
+        const $ConstructionViewMoreButtonn = $('<button>').attr({
+            'type': 'submit',
+            'name': 'button'
+        }).text('View More');
+        $ConstructionViewMoreButtonn.addClass("construction-my-class");
+        $ConstructionViewMoreButtonn.attr('style', 'background-color: #d16501; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; position: absolute;left: 44%; bottom: 17%;cursor: pointer');
+        $ConstructionViewMoreButtonn.on('click', function() {
+            $allConstructionArticless.slice($maxLoad).show();
+            $ConstructionViewMoreButtonn.hide();
+        });
+        $articlesParentClass.find('.construction-my-class').remove();
+        $articlesParentClass.append($ConstructionViewMoreButtonn);
+    }
+  }
+
+  jQuery(document).on('click', '[href]', function(e) {
+      let $buttonClass = $('.my-class');
+      if ($(this).attr('href') !== '#all') {
+          $buttonClass.remove();
+      } else {
+          let i = 0;
+          $('.summary-item-list-container .summary-item-list .summary-item').each(function(item) {
+              if (i > 8) {
+                  $(this).css('display', 'none');
+                  handleViewMore();
+              }
+              i++;
+          });
+      }
+
+      let $arialButtonClass = $('.arial-my-class');
+      if ($(this).attr('href') !== '#arial_photogarpy') {
+          $arialButtonClass.remove();
+      } else {
+          let i = 0;
+          $('.lzs-category-aerial-photography-view').each(function(item) {
+              if (i > 8) {
+                  $(this).css('display', 'none');
+                  arialhandleViewMore();
+              }
+              i++;
+          });
+      }
+
+      let $EventButtonClass = $('.event-my-class');
+      if ($(this).attr('href') !== '#event_photos_videos') {
+          $EventButtonClass.remove();
+      } else {
+          let i = 0;
+          $('.lzs-category-event-photos-view').each(function(item) {
+              if (i > 8) {
+                  $(this).css('display', 'none');
+                  eventhandleViewMore();
+              }
+              i++;
+          });
+      }
+
+      let $PromotionalButtonClass = $('.promotional-my-class');
+      if ($(this).attr('href') !== '#promotional') {
+          $PromotionalButtonClass.remove();
+      } else {
+          let i = 0;
+          $('.lzs-category-promotional-view').each(function(item) {
+              if (i > 8) {
+                  $(this).css('display', 'none');
+                  promotionalhandleViewMore();
+              }
+              i++;
+          });
+      }
+
+      let $StockileButtonClass = $('.stockile-my-class');
+      if ($(this).attr('href') !== '#stockpile_measurement') {
+          $StockileButtonClass.remove();
+      } else {
+          let i = 0;
+          $('.lzs-category-stockpile-measurement-view').each(function(item) {
+              if (i > 8) {
+                  $(this).css('display', 'none');
+                  stockilehandleViewMore();
+              }
+              i++;
+          });
+      }
+
+      let $RoofButtonClass = $('.roof-my-class');
+      if ($(this).attr('href') !== '#roof_ins') {
+          $RoofButtonClass.remove();
+      } else {
+          let i = 0;
+          $('.lzs-category-roof-inspections-view').each(function(item) {
+              if (i > 8) {
+                  $(this).css('display', 'none');
+                  roofhandleViewMore();
+              }
+              i++;
+          });
+      }
+
+      let $DegreeButtonClass = $('.360_degree-my-class');
+      if ($(this).attr('href') !== '#360_dgree') {
+          $DegreeButtonClass.remove();
+      } else {
+          let i = 0;
+          $('.lzs-category-360-degree-view').each(function(item) {
+              if (i > 8) {
+                  $(this).css('display', 'none');
+                  degreehandleViewMore();
+              }
+              i++;
+          });
+      }
+
+      let $GroundButtonClass = $('.ground-my-class');
+      if ($(this).attr('href') !== '#ground_photogarpy') {
+          $GroundButtonClass.remove();
+      } else {
+          let i = 0;
+          $('.lzs-category-ground-photography-view').each(function(item) {
+              if (i > 8) {
+                  $(this).css('display', 'none');
+                  groundhandleViewMore();
+              }
+              i++;
+          });
+      }
+
+      let $CommercialButtonClass = $('.commercial-my-class');
+      if ($(this).attr('href') !== '#commercial') {
+          $CommercialButtonClass.remove();
+      } else {
+          let i = 0;
+          $('.lzs-category-commercial-services').each(function(item) {
+              if (i > 8) {
+                  $(this).css('display', 'none');
+                  commercialhandleViewMore();
+              }
+              i++;
+          });
+      }
+
+      let $ConstructionButtonClass = $('.construction-my-class');
+      if ($(this).attr('href') !== '#construction_site') {
+          $ConstructionButtonClass.remove();
+      } else {
+          let i = 0;
+          $('.lzs-category-construction-view').each(function(item) {
+              if (i > 8) {
+                  $(this).css('display', 'none');
+                  constructionhandleViewMore();
+              }
+              i++;
+          });
+      }
+  });
+  arialhandleViewMore();
+  eventhandleViewMore();
+  promotionalhandleViewMore();
+  stockilehandleViewMore();
+  roofhandleViewMore();
+  degreehandleViewMore();
+  groundhandleViewMore();
+  commercialhandleViewMore();
+  constructionhandleViewMore();
+  setTimeout(() => {
+      handleViewMore();
+      hideArticles();
+  }, 1000);
+});
