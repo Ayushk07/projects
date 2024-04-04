@@ -1,0 +1,113 @@
+ public static function display_supplier_category_FAQ() {
+            ob_start();
+            $term_id = get_queried_object_id();
+           
+           
+            // Get overview data
+            $overview = get_term_meta($term_id, 'overview', true);
+            
+            // Get FAQ items
+            $faq_items = get_term_meta($term_id, 'faq_items', true);
+        
+            if (!empty($faq_items)) {
+                ?>
+                 <style>
+                    body {
+                        background-color: #f4f4f4;
+                        font-family: Arial, sans-serif;
+                    }
+        
+                    .accordion {
+                        max-width: 600px;
+                        margin: 0 auto;
+                    }
+        
+                    .accordion-item {
+                        border-bottom: 1px solid #ccc;
+                    }
+        
+                    .accordion-title {
+                        background-color: #f4f4f4;
+                        padding: 15px;
+                        cursor: pointer;
+                        border-top: 1px solid #ccc;
+                        color: #333;
+                        position: relative;
+                        transition: background-color 0.3s ease;
+                    }
+        
+                    .accordion-title::after {
+                        content: "+"; /* Initially showing plus sign */
+                        position: absolute;
+                        top: 50%;
+                        right: 15px;
+                        transform: translateY(-50%);
+                        transition: transform 0.3s ease;
+                        font-size: 24px; /* Increase the font size */
+                    }
+        
+                    .accordion-content {
+                        padding: 15px;
+                        display: none;
+                        background-color: #fff;
+                        color: #333;
+                        transition: max-height 0.3s ease, padding 0.3s ease;
+                        overflow: hidden;
+                    }
+        
+                    .accordion-item.active .accordion-title::after {
+                        content: "-"; /* Showing minus sign when active */
+                        transform: translateY(-50%);
+                        font-size: 24px; /* Increase the font size */
+                    }
+        
+                    .accordion-item.active .accordion-content {
+                        display: block;
+                        padding-top: 0;
+                        padding-bottom: 15px;
+                    }
+                </style>
+                <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const items = document.querySelectorAll(".accordion-item");
+                            items.forEach((item) => {
+                                const title = item.querySelector(".accordion-title");
+                                title.addEventListener("click", function () {
+                                    if (!item.classList.contains("active")) {
+                                        closeAllAccordions();
+                                        item.classList.add("active");
+                                    } else {
+                                        item.classList.remove("active");
+                                    }
+                                });
+                            });
+                            // Open the first accordion item on load
+                            items[0].classList.add("active");
+                        });
+                        function closeAllAccordions() {
+                            const items = document.querySelectorAll(".accordion-item");
+                            items.forEach((item) => {
+                                item.classList.remove("active");
+                            });
+                        }
+                </script>
+                <div class="accordion">
+                    <?php foreach ($faq_items as $faq_items) { 
+                        $slashless = esc_html(wp_unslash($faq_item['description']));
+                        $description = wp_unslash($slashless);
+                        ?>
+                        <div class="accordion-item">
+                            <h3 class="accordion-title"><?php echo esc_html($faq_items['title']); ?></h3>
+                            <div class="accordion-content">
+                                <p><?php echo $description; ?></p>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
+                <?php
+            } else {
+                echo '<p>No FAQs found.</p>';
+            }
+            
+            return ob_get_clean();
+        }
