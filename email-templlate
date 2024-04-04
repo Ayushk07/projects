@@ -1,0 +1,249 @@
+function shortcode_button_renewal() {
+    ob_start();
+    ?>
+<button type="button" class="btn btn-success" id="renewal_button">Renewal Click me</button>
+<button type="button" class="btn btn-success" id="not_renewal_button">Not Renewal Click me</button>
+<script>
+jQuery(document).ready(function($) {
+    $('#renewal_button').on('click', function() {
+        $.ajax({
+            url: '<?php echo admin_url('admin-ajax.php'); ?>',
+            type: 'POST',
+            data: {
+                action: 'renewal_email_send'
+            },
+            success: function(response) {
+                alert('Renewal Email sent successfully!');
+            },
+
+        });
+    });
+});
+
+jQuery(document).ready(function($) {
+    $('#not_renewal_button').on('click', function() {
+        $.ajax({
+            url: '<?php echo admin_url('admin-ajax.php'); ?>',
+            type: 'POST',
+            data: {
+                action: 'not_renewal_email_send'
+            },
+            success: function(response) {
+                alert('Not Renewal Email sent successfully!');
+            },
+
+        });
+    });
+});
+</script>
+
+<?php
+    return ob_get_clean();
+
+}
+add_shortcode('email_button', 'shortcode_button_renewal');
+function enqueue_custom_scripts()
+{
+    wp_enqueue_script('jquery');
+    wp_enqueue_script('jquery-ui-autocomplete');
+}
+
+add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
+function renewal_email_send() {
+    $renewal_emails = mailto:array("iamqualityassurance3@gmail.com");
+    $headers[] = 'Content-Type: text/html; charset=UTF-8';
+    
+    foreach ($renewal_emails as $email) {
+       
+        $email_parts = explode('@', $email);
+        $name_parts = explode('.', $email_parts[0]);
+        $first_name = ucfirst($name_parts[0]); 
+        $last_name = ucfirst($name_parts[1]);
+
+        $message = '<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Auto Renewal Email</title>
+            <style>
+            body {font-family: Arial, sans-serif;line-height: 1.6;margin: 0;padding: 0;background-color: #f4f4f4;}.container {max-width: 100%;margin: auto;padding: 20px;background-color: #fff;}.header {gap: 10%;display: flex;background-color: green;color: #fff;text-align: center;padding-bottom: 2%;padding-top: 1%;}.content {padding: 20px 0;}img {padding-left: 3%;padding-top: 4%;max-width: 50%;}h1 {padding-top: 4%;}
+            @media only screen and (max-width: 600px) {.header {flex-direction: column;}img {max-width: 100%;}}
+            </style>
+        </head>
+        <body>
+            <table class="container content-type" cellspacing="0" cellpadding="0" border="0" style="max-width:900px; padding:0; display: block;">
+                <tr align="center">
+                    <td align="center">
+                        <table class="header" cellspacing="0" cellpadding="0" border="0">
+                            <tr>
+                                <td>
+                                    <img src="https://oilco-op.com/wp-content/uploads/Logo.png" width="245">
+                                </td>
+                                <td style="font-family: sans-serif;text-align:center; font-size:32px; padding-top: 2%; color:#fff; line-height:24px; font-weight: 300;">
+                                    Oil Co-op Subscription Renewal
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <table class="content" cellspacing="0" cellpadding="0" border="0">
+                            <tr align="center" valign="top">
+                                <td style="font-family: sans-serif; font-size:16px; color: #0000009c; line-height:24px; padding:0 20px; font-weight: 600; text-align: justify;">
+                                    <br> Dear <strong><span id="memberName"></span></strong>,
+                                </td>
+                            </tr>
+                            <tr align="center" valign="top">
+                                <td style="font-family: sans-serif; font-size:16px; color: #0000009c; padding:0 20px; line-height:24px; font-weight: 600; text-align: justify;">
+                                    <br> Thank you for your participation in the Citizen\'s Oil Co-op. We are emailing to confirm with you that your membership has been set-up on automatic renewal.
+                                </td>
+                            </tr>
+                            <tr align="center" valign="top">
+                                <td style="font-family: sans-serif; font-size:16px; color: #0000009c; line-height:24px; padding:0 20px; font-weight: 600; text-align: justify;">
+                                    <br> On June 1, 2024, your credit card ending in <strong><span id="cardEnding">0000</span></strong> with an expiration of <strong><span id="cardExpiration">00/00</span></strong> will be charged <strong><span id="renewalAmount">$35</span></strong>. You will receive an email receipt for the fee on that date.
+                                </td>
+                            </tr>
+                            <tr align="center" valign="top">
+                                <td style="font-family: sans-serif; font-size:16px; color: #0000009c; line-height:24px; padding:0 20px; font-weight: 600; text-align: justify;">
+                                    <br> If this card has expired or is no longer valid, please <a href="#">Click here</a> to update at your portal.
+                                </td>
+                            </tr>
+                            <tr align="left" valign="top">
+                                <td style="font-family: sans-serif; font-size:16px; color: #0000009c; padding:0 20px; line-height:24px; font-weight: 600; text-align: justify;">
+                                    <br> Remember to take full advantage of your membership. Reply to this email and let us know if you are interested in solar, insurance, energy audit, or electricity.
+                                </td>
+                            </tr>
+                            <tr align="center" valign="top">
+                                <td style="font-family: sans-serif; font-size:16px; color: #0000009c; padding:0 20px; line-height:24px; font-weight: 600; text-align: justify;">
+                                    <br> Thank you again for your continued participation in the Co-op.
+                                </td>
+                            </tr>
+                            <tr align="center" valign="top">
+                                <td style="font-family: sans-serif; font-size:16px; color: #0000009c; padding:0 20px; line-height:24px; font-weight: 600; text-align: justify;">
+                                    <br> Best,<br> Citizen\'s Oil Co-op<br> 860-561-6011<br> <a href="http://oilco-op.com">oilco-op.com</a><br> P.O. Box 271718<br> West Hartford, CT 06127
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </body>
+        </html>';
+        
+
+
+        $message = str_replace('<span id="memberName"></span>', $first_name . ' ' . $last_name, $message);
+
+        $subject = "Auto Renewal Email for $first_name $last_name";
+        wp_mail($email, $subject, $message, $headers);
+    }
+    
+    die(); 
+}
+add_action('wp_ajax_renewal_email_send', 'renewal_email_send');
+add_action('wp_ajax_nopriv_renewal_email_send', 'renewal_email_send');
+
+function not_renewal_email_send() {
+    $not_renewal_emails = mailto:array("iamqualityassurance3@gmail.com", "mailto:ayushkarma007@gmail.com", "mailto:devwebnware@gmail.com");
+    $headers[] = 'Content-Type: text/html; charset=UTF-8';
+    
+    foreach ($not_renewal_emails as $email) {
+       
+        $email_parts = explode('@', $email);
+        $name_parts = explode('.', $email_parts[0]);
+        $first_name = ucfirst($name_parts[0]); 
+        $last_name = ucfirst($name_parts[1]);
+
+        $message = '<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Not Auto Renewal Email</title>
+            <style>
+            body {font-family: Arial, sans-serif;line-height: 1.6;margin: 0;padding: 0;background-color: #f4f4f4;}.container {max-width: 100%;margin: auto;padding: 20px;background-color: #fff;}.header {gap: 10%;display: flex;background-color: green;color: #fff;text-align: center;padding-bottom: 2%;padding-top: 1%;}.content {padding: 20px 0;}img {padding-left: 3%;padding-top: 4%;max-width: 50%;}h1 {padding-top: 4%;}ul.e {list-style-type: number;}
+            @media only screen and (max-width: 600px) {.header {flex-direction: column;}img {max-width: 100%;}}
+            </style>
+        </head>
+
+        <body>
+        <table class="container content-type" cellspacing="0" cellpadding="0" border="0" style="max-width:900px; padding:0; display: block;">
+            <tr align="center">
+                <td align="center">
+                    <table class="header" cellspacing="0" cellpadding="0" border="0">
+                        <tr>
+                            <td>
+                                <img src="https://oilco-op.com/wp-content/uploads/Logo.png" width="245">
+                            </td>
+                            <td style="font-family: sans-serif;text-align:center; font-size:32px; padding-top: 2%; color:#fff; line-height:24px; font-weight: 300;">
+                                Oil Co-op Subscription Not Renewal
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <table class="content" cellspacing="0" cellpadding="0" border="0">
+                        <tr align="center" valign="top">
+                            <td style="font-family: sans-serif; font-size:16px; color: #0000009c; line-height:24px; padding:0 20px; font-weight: 600; text-align: justify;">
+                                <br> Dear <strong><span id="memberName"></span></strong>,
+                            </td>
+                        </tr>
+
+                        <tr align="center" valign="top">
+                            <td style="font-family: sans-serif; font-size:16px; color: #0000009c; line-height:24px; padding:0 20px; font-weight: 600; text-align: justify;">
+                                <br> Membership renewals are due on 6/1/24.
+                            </td>
+                        </tr>
+
+                        <tr align="center" valign="top">
+                            <td style="font-family: sans-serif; font-size:16px; color: #0000009c; line-height:24px; padding:0 20px; font-weight: 600; text-align: justify;">
+                                <br> Steps to renew:
+                            </td>
+                        </tr>
+                        <tr align="center" valign="top">
+                            <td style="font-family: sans-serif; font-size:16px; color: #0000009c; padding:0 20px; line-height:24px; font-weight: 600; text-align: justify;">
+                            <li><b style="color:black;">Access your Portal.</b> Click here to access your portal. - If you don’t know your password, you can click here and enter your email address to receive a password reset email.</li>
+                            </td>
+                        </tr>
+
+                        <tr align="center" valign="top">
+                            <td style="font-family: sans-serif; font-size:16px; color: #0000009c; line-height:24px; padding:0 20px; font-weight: 600; text-align: justify;">
+                            <li><b style="color:black;">Go to Payment Methods.</b> Add your credit card in your member portal in payment methods.</li>
+                            </td>
+                        </tr>
+
+                        <tr align="center" valign="top">
+                            <td style="font-family: sans-serif; font-size:16px; color: #0000009c; line-height:24px; padding:0 20px; font-weight: 600; text-align: justify;">
+                            <li> <b style="color:black;">Click on Subscriptions.</b> Review and pay the renewal by clicking the pay button in subscriptions.</li>
+                            </td>
+                        </tr>
+                        <tr align="left" valign="top">
+                            <td style="font-family: sans-serif; font-size:16px; color: #0000009c; padding:0 20px; line-height:24px; font-weight: 600; text-align: justify;">
+                                <br>Remember to take full advantage of your membership. Reply to this email and let us know if you are interested in solar, insurance, energy audit, or electricity.
+                            </td>
+                        </tr>
+
+                        <tr align="center" valign="top">
+                            <td style="font-family: sans-serif; font-size:16px; color: #0000009c; padding:0 20px; line-height:24px; font-weight: 600; text-align: justify;">
+                                <br>Best,<br>Citizen\'s Oil Co-op<br>860-561-6011<br><a href="http://oilco-op.com">oilco-op.com</a><br>P.O. Box 271718<br>West Hartford, CT 06127
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </body>
+        </html>';
+        $message = str_replace('<span id="memberName"></span>', $first_name . ' ' . $last_name, $message);
+        $subject = "Auto Not Renewal Email for $first_name $last_name";
+        wp_mail($email, $subject, $message, $headers);
+    }
+    
+    die(); 
+}
+add_action('wp_ajax_not_renewal_email_send', 'not_renewal_email_send');
+add_action('wp_ajax_nopriv_not_renewal_email_send', 'not_renewal_email_send'); sir ye code hain crontest me
