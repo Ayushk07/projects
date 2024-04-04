@@ -1,0 +1,83 @@
+<tr valign="top">
+                <th scope="row" class="titledesc">
+                    <label for="location_cpt_overview_gd_place">Overview</label>
+                </th>
+                <td class="forminp forminp-textarea">
+                    <div id="wp-location_cpt_overview_gd_place-wrap" class="wp-core-ui wp-editor-wrap tmce-active">
+                        <?php
+                        $overview_data = ! empty( $seo->location_overview ) && isset( $seo->location_overview) ? stripslashes( $seo->location_overview) : '';
+                        $id = 'location_cpt_overview_gd_place';
+                        $name = 'location_cpt_overview[gd_place]';
+                        // Settings for wp_editor
+                        $settings = apply_filters( 'geodir_location_cpt_overview_editor_settings', array(
+                            'wpautop' => false,
+                            'media_buttons' => false,
+                            'editor_height' => 80,
+                            'textarea_rows' => 5,
+                            'textarea_name' => $name,
+                        ), $id, $name );
+                        wp_editor( $overview_data, $id, $settings );
+                        ?>
+                    </div>
+                    <p class="description">Overview to show for this region.</p>
+                </td>
+            </tr>
+            <style>
+                tr#faq-container th.titledesc {
+                        width: 100%;
+                        display: block;
+                    }
+
+                    tr#faq-container tr {
+                        display: block;
+                        width: 100%;
+                    }
+
+                    tr#faq-container + tr th {
+                        display: none;
+                    }
+                    div#geodir-save-seo-div table.form-table tr {
+                        display: block;
+                    }
+            </style>
+            <tr valign="top" id="faq-container" >
+            <?php
+                if (!empty($seo->faq)) {
+                     $faq_data = unserialize($seo->faq);
+                    foreach ($faq_data as $faq_item) {
+                 ?>
+               
+               <th scope="row" class="titledesc" >
+                    <label for="faq_title"><?php _e('FAQ', 'geodirlocation'); ?></label>
+                </th>
+                <td class="forminp forminp-text">
+                    <input type="text" name="faq_title[]" class="regular-text" value="<?php echo esc_attr($faq_item['title']); ?>">
+                   
+                </td>
+                <?php
+                $faq_discription='';
+                $faq_discription = esc_attr(wp_unslash($faq_item['description']));
+                $faq_item_discription = wp_unslash($faq_discription);
+                ?>
+                <td class="forminp forminp-text">
+                    <textarea name="faq_description[]" class="regular-text code" ><?php echo $faq_item_discription; ?></textarea>
+                </td>
+                
+                <?php
+                        }
+                    }else {
+                ?>
+                
+                 <th scope="row" class="titledesc">
+                    <label for="faq_title"><?php _e('FAQ', 'geodirlocation'); ?></label>
+                </th>
+                <td class="forminp forminp-text" style="">
+                    <input type="text" name="faq_title[]" class="regular-text" >
+                   
+                </td>
+                <td class="forminp forminp-text">
+                    <textarea name="faq_description[]" class="regular-text code" ></textarea>
+                </td>
+                <?php } ?>
+                
+            </tr>
