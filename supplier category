@@ -1,0 +1,179 @@
+function add_supplier_category_fields($term) {
+            $term_id = $term->term_id;
+            $overview = get_term_meta($term_id, 'overview', true);
+            $supplier_category_discription = get_term_meta($term_id, 'discription', true);
+            $supplier_category_wow_planner = get_term_meta($term_id, 'wow_planner', true);
+            if (empty($overview)) {
+                $overview = '';
+            }else{
+
+            }
+            if (empty($supplier_category_discription)) {
+                $supplier_category_discription = '';
+            }else{
+
+            }
+            if (empty($supplier_category_wow_planner)) {
+                $supplier_category_wow_planner = '';
+            }else{
+
+            }
+
+            ?>
+            <style>
+                #edittag .form-table tr.form-field.term-ct_cat_icon-wrap.gd-term-form-field {
+                display: none;
+                }
+                #edittag .form-table tr.form-field.term-ct_cat_font_icon-wrap.gd-term-form-field {
+                    display: none;
+                }
+                #edittag .form-table tr.form-field.term-ct_cat_color-wrap.gd-term-form-field {
+                    display: none;
+                }
+                #edittag .form-table tr.form-field.term-ct_cat_schema-wrap.gd-term-form-field {
+                    display: none;
+                }
+                #edittag .form-table tr.form-field.term-parent-wrap {
+                    display: none;
+                }
+                #edittag .form-table tr.form-field.term-description-wrap {
+                    display: none;
+                }
+                #edittag .form-table tr.form-field.term-ct_cat_bottom_desc-wrap.gd-term-form-field {
+                    display: none;
+                }
+                #edittag .form-table tr.form-field.term-ct_cat_default_img-wrap.gd-term-form-field {
+                    display: none;
+                }
+                #edittag .form-table tr.form-field.term-ct_cat_top_desc-wrap.gd-term-form-field.default-top-desc {
+                    display: none;
+                }
+                #edittag .form-table tr.form-field.topdesc_type {
+                    display: none;
+                }
+                #edittag .form-table tr.form-field.term-ct_cat_top_desc-wrap.gd-term-form-field.default-top-desc {
+                    display: none !important;
+                }
+                #edittag .form-table tr.form-field.edit-is-popular {
+                    display: none;
+                }
+            </style>
+            <tr class="form-field" id="hero_image_vendor-texonomy">
+                <th scope="row" valign="top"><label for="hero_image_vendor">Hero image vendor</label></th>
+                <td>
+                    <?php
+                        $hero_image_vendor = get_term_meta($term_id, 'hero_image_vendor', true);
+                    ?>
+                    <input type="text" name="hero_image_vendor" id="hero_image_vendor_input" class="regular-text" placeholder="Hero Image Vendor" value="<?php echo esc_attr($hero_image_vendor); ?>">
+                    <span id="hero_image_vendor_message" style="display: none; color: #999;">This vendor appears on the Hero image</span>
+                </td>
+            </tr>
+
+            <tr class="form-field">
+                <th scope="row" valign="top"><label for="description">Hero image Description</label></th>
+                <td>
+                    <?php
+                    $editor_id_name = 'discription';
+                    wp_editor($supplier_category_discription, $editor_id_name, array(
+                        'textarea_rows' => 5,
+                        'textarea_cols' => 30,
+                    ));
+                    ?>
+                </td>
+            </tr>
+
+            <tr class="form-field">
+                <th scope="row" valign="top"><label for="overview">Overview</label></th>
+                <td>
+                    <?php
+                    $editor_id = 'overview';
+                    wp_editor($overview, $editor_id, array(
+                        'textarea_rows' => 5,
+                        'textarea_cols' => 30,
+                    ));
+                    ?>
+                </td>
+            </tr>
+            <tr class="form-field" id="faq-container-texonomy">
+                <th scope="row" valign="top"><label for="custom_field1">FAQ</label></th>
+                <td>
+                    <ul id="faq-list">
+                        <?php
+                        $faq_items = get_term_meta($term_id, 'faq_items', true);
+                        if (!empty($faq_items) && is_array($faq_items)) {
+                            foreach ($faq_items as $faq_item) {
+                                ?>
+                                <li>
+                                    <input type="text" name="faq_title[]" class="regular-text" placeholder="Title" value="<?php echo esc_attr($faq_item['title']); ?>">
+                                    <?php
+                                    $faq_description='';
+                                    $faq_ite_discription='';
+                                    $faq_ite_discription = esc_attr(wp_unslash($faq_item['description']));
+                                    $faq_description = wp_unslash($faq_ite_discription);
+                                    ?>
+                                    <textarea name="faq_description[]" placeholder="Description" class="regular-text code"><?php echo $faq_description; ?></textarea>
+                                </li>
+                                <?php
+                            }
+                        } else {
+                            ?>
+                            <li>
+                                <input type="text" name="faq_title[]" class="regular-text" placeholder="Title">
+                                <textarea name="faq_description[]" placeholder="Description" class="regular-text code"></textarea>
+                            </li>
+                        <?php } ?>
+                    </ul>
+                    <button type="button" id="add-faq-texonomy" class="button">ADD MORE</button>
+                </td>
+            </tr>
+            
+            <tr class="form-field">
+                <th scope="row" valign="top"><label for="wow_planner">8 Tips for Hiring Photographers WOW Planners</label></th>
+                <td>
+                    <?php
+                    $editor_id_wow_planner = 'wow_planner';
+                    wp_editor($supplier_category_wow_planner, $editor_id_wow_planner, array(
+                        'textarea_rows' => 5,
+                        'textarea_cols' => 30,
+                    ));
+                    ?>
+                </td>
+            </tr>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var heroImageVendorInput = document.getElementById('hero_image_vendor_input');
+                    var heroImageVendorMessage = document.getElementById('hero_image_vendor_message');
+
+                    heroImageVendorInput.addEventListener('input', function () {
+                        if (heroImageVendorInput.value.trim() !== '') {
+                            heroImageVendorMessage.style.display = 'block';
+                        } else {
+                            heroImageVendorMessage.style.display = 'none';
+                        }
+                    });
+                });
+                
+                document.addEventListener('DOMContentLoaded', function () {
+                    var faqContainer = document.getElementById('faq-list');
+                    var addFaqButton = document.getElementById('add-faq-texonomy');
+        
+                    addFaqButton.addEventListener('click', function () {
+                        var newFaqRow = document.createElement('li');
+                        newFaqRow.innerHTML = `
+                            <input type="text" name="faq_title[]" placeholder="Title" class="regular-text">
+                            <textarea name="faq_description[]" placeholder="Description" class="regular-text code"></textarea>
+                            <button type="button" class="remove-faq button">REMOVE</button>
+                        `;
+                        document.getElementById('faq-list').appendChild(newFaqRow);
+                    });
+        
+                    // Remove FAQ
+                    faqContainer.addEventListener('click', function (event) {
+                        if (event.target.classList.contains('remove-faq')) {
+                            event.target.parentNode.remove();
+                        }
+                    });
+                });
+            </script>
+            <?php
+        }
