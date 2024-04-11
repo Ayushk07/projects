@@ -1,0 +1,173 @@
+<?php
+public static function fws_custom_filter_posts( $query ){
+    // if not in admin area return
+    if ( ! is_admin() ) {
+        return $query;
+    }
+    // echo '<pre>'; print_r( $query ); echo '</pre>';
+
+    global $pagenow;
+    global $typenow;
+    global $wpdb;
+
+    if ($pagenow == 'edit.php' && $typenow == 'gd_place' && isset($_GET['custom_filter_action'])) {
+        // _custom_gd_city, v_custom_gd_region_poi, _custom_gd_region
+        $tag = isset( $_GET['_custom_gd_place_tags'] ) && ! empty( $_GET['_custom_gd_place_tags'] ) ? (int) $_GET['_custom_gd_place_tags'] : '';
+        
+        $meta_query = $query->get( 'meta_query' );
+        if ( ! is_array( $meta_query ) ) {
+            $meta_query = array();
+        }
+        
+        $tax_query = array();
+
+        if ( isset( $_GET['_custom_gd_region'] ) && ! empty( $_GET['_custom_gd_region'] ) ) {
+            $meta_query[] = array(
+                'key'     => 'venue_region',
+                'value'   => sanitize_text_field( $_GET['_custom_gd_region'] ),
+                'compare' => 'LIKE',
+            );
+        }
+        
+        if ( isset( $_GET['_custom_gd_city'] ) && ! empty( $_GET['_custom_gd_city'] ) ) {
+            $meta_query[] = array(
+                'key'     => 'venue_city',
+                'value'   => sanitize_text_field( $_GET['_custom_gd_city'] ),
+                'compare' => 'LIKE',
+            );
+        }
+        
+        if ( isset( $_GET['_custom_gd_region_poi'] ) && ! empty( $_GET['_custom_gd_region_poi'] ) ) {
+            $custom_gd_region_poi = $_GET['_custom_gd_region_poi'];
+            $meta_query[] = array(
+                'key'     => 'places_of_interest',
+                'value'   => $custom_gd_region_poi,
+                'compare' => 'LIKE',
+            );
+        }
+
+        if (isset($_GET['_custom_gd_package']) && !empty($_GET['_custom_gd_package'])) {
+            $custom_gd_package = $_GET['_custom_gd_package'];
+            $custom_gd_package = urldecode($custom_gd_package);
+            
+            $meta_query[] = array(
+                'key'     => 'avlabs_supp_packages',
+                'value' => '\;i\:' . $custom_gd_package . '\;|\"' . $custom_gd_package . '\";',
+                'compare' => 'REGEXP'
+            );
+        }
+        
+        // echo '<pre>';
+        // print_r($pattern);
+        // echo '</pre>';
+
+        if ( !empty($tag) ) {
+            $tax_query[] = array(
+                'taxonomy' => 'gd_place_tags', // Replace with your actual taxonomy slug
+                'field'    => 'term_id',
+                'terms'    => $tag,
+            );
+        }
+        
+        // Combine meta query and tax query
+        $query->set( 'meta_query', $meta_query );
+        $query->set( 'tax_query', $tax_query );
+    }
+}
+
+public static function fws_custom_extra_table_column($which){
+    global $typenow;
+    global $wpdb;
+    global $post_type;
+    $screen = get_current_screen();
+    // $typenow === 'gd_suppliers'
+    if( $which === 'top' && $typenow === 'gd_place' ) :
+        $table = $wpdb->prefix . 'geodir_post_locations'; // geodir_gd_place_detail
+        // echo "SELECT DISTINCT region, region_slug FROM $table WHERE place_of_interest = 0";
+        $regions = $wpdb->get_results("SELECT DISTINCT region, region_slug FROM $table WHERE place_of_interest = 0");
+        $places = $wpdb->get_results("SELECT DISTINCT region, region_slug FROM $table WHERE place_of_interest = 1");
+        $cities = $wpdb->get_results("SELECT DISTINCT city, city_slug FROM $table");
+
+        $taxonomy_name = 'gd_place_tags';
+        $args = array(
+            'taxonomy' => $taxonomy_name,
+            'hide_empty' => false,
+        );
+        $tags = get_terms($args);
+        $packages = $wpdb->get_results("SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = 'avlabs_supp_packages'");
+     
+        $current_tag = isset( $_GET['_custom_gd_place_tags'] ) && ! empty( $_GET['_custom_gd_place_tags'] ) ? (int) $_GET['_custom_gd_place_tags'] : '';
+        $current_region = isset( $_GET['_custom_gd_region'] ) && ! empty( $_GET['_custom_gd_region'] ) ? $_GET['_custom_gd_region'] : '';
+        $current_place = isset( $_GET['_custom_gd_region_poi'] ) && ! empty( $_GET['_custom_gd_region_poi'] ) ? $_GET['_custom_gd_region_poi'] : '';
+        $current_city = isset( $_GET['_custom_gd_city'] ) && ! empty( $_GET['_custom_gd_city'] ) ?  $_GET['_custom_gd_city'] : '';
+        $current_package = isset($_GET['_custom_gd_package']) && !empty($_GET['_custom_gd_package']) ? $_GET['_custom_gd_package'] : '';
+
+        ?>
+        <div class="alignleft actions">
+            <div class="custom-actions-container">
+                <select id="custom-gd-filter-by-region" name="_custom_gd_region">
+                    <option value=""><?php echo __('Region', 'geodirectory'); ?></option>
+                    <?php if( ! empty( $regions ) ): ?>
+                        <?php foreach( $regions as $region ): ?>
+                            <?php if( ! empty( $region->region) ): ?>
+                                <option data-slug="<?php echo $region->region_slug; ?>" <?php echo $current_region == $region->region ? 'selected' : ''; ?> value="<?php echo $region->region; ?>"><?php echo $region->region; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </select>
+
+                <select id="custom-gd-filter-by-region-poi" name="_custom_gd_region_poi">
+                    <option value=""><?php echo __('POI', 'geodirectory'); ?></option>
+                    <?php if( ! empty( $places ) ): ?>
+                        <?php foreach( $places as $place ): ?>
+                            <?php if( ! empty( $place->region) ): ?>
+                                <option data-slug="<?php echo $place->region_slug; ?>" <?php echo $current_place == $place->region ? 'selected' : ''; ?> value="<?php echo $place->region; ?>"><?php echo $place->region; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </select>
+
+                <select id="custom-gd-filter-by-city" name="_custom_gd_city">
+                    <option value=""><?php echo __('City', 'geodirectory'); ?></option>
+                    <?php if( ! empty( $cities ) ): ?>
+                        <?php foreach( $cities as $city ): ?>
+                            <?php if( ! empty( $city->city) ): ?>
+                                <option data-slug="<?php echo $city->city_slug; ?>" <?php echo $current_city == $city->city ? 'selected' : ''; ?>  value="<?php echo $city->city; ?>"><?php echo $city->city; ?></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </select>
+
+                <select id="custom-gd-filter-by-package" name="_custom_gd_package">
+                    <option value=""><?php echo __('Package', 'geodirectory'); ?></option>
+                    <?php 
+                    if (!empty($packages)) {
+                        foreach ($packages as $package) {
+                            $package_data = unserialize($package->meta_value);
+                            if (isset($package_data['packegs_setting'])) {
+                                foreach ($package_data['packegs_setting'] as $packegs_setting) { ?>
+                                    <option <?php echo $current_package == $packegs_setting['name'] ? 'selected' : ''; ?> value="<?php echo $packegs_setting['name']; ?>"><?php echo $packegs_setting['name']; ?></option>
+                                <?php }
+                            }
+                        }
+                    } 
+                    ?>
+                </select>
+
+                <select id="custom-gd-filter-by-tags" name="_custom_gd_place_tags">
+                    <option value=""><?php echo __('Tags', 'geodirectory'); ?></option>
+                    <?php if ( ! empty( $tags ) && ! is_wp_error( $tags ) ) : ?>
+                        <?php foreach( $tags as $tag ): ?>
+                            <option data-slug="<?php echo $tag->slug; ?>" <?php echo $current_tag == $tag->term_id ? 'selected' : ''; ?> value="<?php echo $tag->term_id; ?>"><?php echo $tag->name; ?></option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </select>
+
+                <input type="submit" name="custom_filter_action" class="button" id="custom-post-query-submit" value="<?php echo __('Filter'); ?>">
+            </div>
+        </div>
+        <?php
+    endif;
+}
+add_action('manage_posts_extra_tablenav', array( __CLASS__, 'fws_custom_extra_table_column' ), 10, 1);
+add_action('pre_get_posts', array( __CLASS__, 'fws_custom_filter_posts' ), 999, 1);
