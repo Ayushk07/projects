@@ -1,0 +1,30 @@
+  public static function fws_get_lat_lon_callback(){
+            if ( isset( $_POST['address'] ) ) {
+                $address = sanitize_text_field( $_POST['address'] );
+                
+                // Construct the URL for geocoding service
+                $geocode_url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode( $address ) . '&key=AIzaSyCUOLjm7aqPBDHVAdkX0Ehmqd9NAoZEp7A';
+                
+                // Fetch data from the geocoding service
+                $response = wp_remote_get( $geocode_url );
+        
+                if ( !is_wp_error( $response ) && $response['response']['code'] == 200 ) {
+                    $data = json_decode( $response['body'] );
+                    
+                    if ( $data->status == 'OK' ) {
+                        $latitude = $data->results[0]->geometry->location->lat;
+                        $longitude = $data->results[0]->geometry->location->lng;
+                        wp_send_json_success( array( 'lat' => $latitude, 'lon' => $longitude ) );
+                    } else {
+                        wp_send_json_error( 'Failed to retrieve latitude and longitude for the provided address.' );
+                    }
+                } else {
+                    wp_send_json_error( 'Failed to retrieve latitude and longitude for the provided address.' );
+                }
+            } else {
+                wp_send_json_error( 'Address parameter is missing.' );
+            }
+        }
+    }
+    //Calling Class Init method..
+    FwsSupplierBackend::init();
