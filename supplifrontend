@@ -1,0 +1,146 @@
+ public static function my_custom_styles_avlabs_supp_ajax_gd_search_limited_content() {
+            echo '<style>
+                .avlabs_supp_ajax_gd_search_limited_content {
+                    display: -webkit-box;
+                    -webkit-line-clamp: 3; /* Limit to 3 lines */
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                    text-overflow: ellipsis; /* Add ellipsis (...) for overflowed text */
+                }
+            </style>';
+        }
+        
+        public static function avlabs_supp_ajax_gd_search(){
+            global $gd_post, $wpdb, $post;
+        
+            $archive_instance = new CLASSFWSFrontendSupplierArchive(); // Instantiate the class
+            
+            $paged          = ( !empty($_REQUEST['paged']) )    ? $_REQUEST['paged']    :   1;
+            $featured       = ( isset($_REQUEST['featured']))   ? $_REQUEST['featured'] :   0;
+            $region         = ( isset($_REQUEST['region'])          &&  $_REQUEST['region'] != 'undefined' && $_REQUEST['region'] != '')              ?   $_REQUEST['region']           :   '';
+            $stype          = ( isset($_REQUEST['stype'])           &&  $_REQUEST['stype'] != 'undefined' )              ?   $_REQUEST['stype']            :   'gd_suppliers';
+            $setting_type   = ( isset($_REQUEST['setting_type'])    &&  $_REQUEST['setting_type'] != 'undefined' )       ?   $_REQUEST['setting_type']     :   '';
+            $budget         = ( isset($_REQUEST['budget'])          &&  $_REQUEST['budget'] != 'undefined')              ?   $_REQUEST['budget']           :   '';
+            $accomodation   = ( isset($_REQUEST['accomodation'])    &&  $_REQUEST['accomodation'] != 'undefined' )       ?   $_REQUEST['accomodation']     :   '';
+            $guests         = ( isset($_REQUEST['guests'])          &&  $_REQUEST['guests'] != 'undefined')              ?   $_REQUEST['guests']           :   '';
+            $search         = ( isset($_REQUEST['search'])          &&  !empty($_REQUEST['search']) )                    ?   $_REQUEST['search']           :   '';
+            $category       = ( isset($_REQUEST['category'])        &&  $_REQUEST['category'] != 'undefined' && $_REQUEST['category'] != '' )           ?   $_REQUEST['category']         :   '';
+        
+            $query_args = array(
+                'post_type'             =>  $stype,
+                'search'                =>  $search,
+                'post_status'           =>  'publish',
+                'posts_per_page'        =>  12,
+                'pageno'                =>  $paged,
+                'category'              =>  $category,
+            );
+        
+            $city_detail = [
+                'region'        =>  $region,
+                'settingtype'   =>  $setting_type,
+                'price'         =>  $budget,
+                'accommodation' =>  $accomodation,
+                'no_of_guests'  =>  $guests,
+                'featured'      =>  $featured
+            ];
+        
+            $city_details   =   (object)$city_detail;
+            $hotal          =   $city_details;
+            $all_rows       =   $archive_instance->avlabs_geodir_get_widget_listings_gd_search($query_args,true,$hotal);
+            $rows           =   $archive_instance->avlabs_geodir_get_widget_listings_gd_search($query_args,false,$hotal);
+            $count          =   count($all_rows);
+        
+            $geodir_settings        = get_option('geodir_settings');
+            $post_type_page_id      = $geodir_settings['post_types'][$stype]['page_archive_item'];
+            if($post_type_page_id == '0'){
+                $post_type_page_id = '106';
+            }
+        
+            if($count > 0){
+                echo '<div class="geodir-loop-container  sdel-bcebbf46"><div class="geodir-category-list-view av_listing_outer clearfix geodir-listing-posts geodir-gridview gridview_onefourth" style="display: flex; flex-wrap: wrap; width: 100%">';
+                foreach ($rows as $post):
+                    $post_id        =   $post->ID;
+                    $geodir_post    =   geodir_get_post_info( $post_id );
+                    $post_images    =   get_post_images( $geodir_post );
+                    $permalink      =   get_permalink($post_id);
+                    $price          =   geodir_get_post_meta($post_id, 'price', true);
+                    $metaHtml       =   '';
+        
+                    if (strpos($permalink, 'wedding-supplier') !== false) {
+                        $supplier_card_text = $wpdb->get_row("SELECT supplier_card_text FROM {$wpdb->prefix}geodir_gd_suppliers_detail WHERE post_id = $post_id");
+                        $limited_content = $supplier_card_text->supplier_card_text;
+                    } elseif (strpos($permalink, 'wedding-venue') !== false) {
+                        $venue_card_text = $wpdb->get_row("SELECT venue_card_text FROM {$wpdb->prefix}geodir_gd_place_detail WHERE post_id = '$post_id'");
+                        $limited_content = $venue_card_text->venue_card_text;
+                    }
+                  
+                    // $contentWords = explode(" ", $limited_content);
+                    // if (count($contentWords) > 20) {
+                    //     $limited_content = implode(" ", array_slice($contentWords, 0, 20)) . '...';
+                    // } else {
+                    //     $limited_content = implode(" ", $contentWords);
+                    // }
+        
+                    if(!empty($price)){
+                        $metaHtml .= "<span class='price'>From [gd_post_meta key='price' show='value-strip' no_wrap='1']</span>";
+                    }
+                    echo '<div class="av_listing_elements card ">';
+                    setup_postdata($post);
+                    $content = "[gd_archive_item_section type='open' position='left']
+                    [gd_post_badge key='featured' condition='is_not_empty' badge='FEATURED' bg_color='#fd4700' txt_color='#ffffff' css_class='gd-ab-top-left-angle gd-badge-shadow']
+                    <div class='gd-supplier-slider-second-main'>
+                    ";
+                    if(!empty($post_images)){
+                        $content .= "<div class='gd-supplier-slider-second'>";
+                        foreach($post_images as $img){
+                            if(!empty($img['src'])){
+                                $content .= '<div class="gd-img-item-second"><img class="gd-post-image" src="'.$img['src'].'"></div>';
+                            }
+                        }
+                        $content .= "</div>";
+                    }
+                    $content .= "
+                    </div>
+                    [gd_archive_item_section type='close' position='left']
+                    [gd_archive_item_section type='open' position='right']
+                    <div class='fav'>
+                    [gd_post_fav show='' alignment='right' list_hide_secondary='2']
+                    </div>
+                    <div class='heading'>
+                    [gd_post_title tag='h2']
+                    </div>
+                    <div class='post-meta-data'>
+                        <span class='region'>[gd_post_meta key='region' show='value-raw' no_wrap='1']</span>
+                        <div class='meta-childs'>".$metaHtml."</div>
+                    </div>
+                    <div class='gd-link-main'>
+                    <div class='gd-link-row right'>
+                    [gd_post_rating show='short-count' size='0' border_type='border']
+                    </div>
+                    </div>
+                    [gd_post_badge key='featured' condition='is_not_empty' icon_class='fas fa-certificate' badge='Featured' bg_color='#ffb100' txt_color='#ffffff' alignment='left']
+                    [gd_post_badge key='claimed' condition='is_not_empty' search='+30' icon_class='fas fa-user-check fa-fw' badge='Verified' bg_color='#23c526' txt_color='#ffffff' alignment='left' list_hide_secondary='3']
+                    [gd_author_actions author_page_only='1']
+                    [gd_post_distance]
+                    [gd_post_meta key='business_hours' location='listing' list_hide_secondary='2']
+                    [gd_output_location location='listing']
+                    <div class='venue_card_text avlabs_supp_ajax_gd_search_limited_content'> ".$limited_content."</div>
+                    <div class='post-learn-more-btn'>
+                        <a href='".$permalink."' class='custom-learn-more-btn'>LEARN MORE</a>
+                    </div>
+                    <a href='".$permalink."' class='listing-box-link'></a>
+                    [gd_archive_item_section type='close' position='right']";
+                    echo do_shortcode($content);
+                    echo '</div>';
+                endforeach;
+                echo '</div>';
+                echo '<div class="pagination_master">';
+                avlabs_listing_pagination_gd_search($count,12,$paged);
+                echo '</div>';
+                echo '</div>';
+            }else{
+                echo '<h3>No Records Found.</h3>';
+            }
+        
+            die;
+        }
