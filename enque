@@ -1,0 +1,13 @@
+ public static function add_script_css_admin(){
+            // register script
+            wp_register_script('frenchweddingstyle-custom-script',frenchweddingstyleCustomization::get_plugin_url().'back-end/assets/js/backend-scripts.js', array('jquery'), time(), true);
+            //localize script
+            wp_localize_script('frenchweddingstyle-custom-script', 'my_ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'site_url' => site_url() ) );
+            //enqueue script
+            wp_enqueue_script('frenchweddingstyle-custom-script');
+
+            // register stylesheet
+            // wp_register_style('frenchweddingstyle-custom-css', frenchweddingstyleCustomization::get_plugin_url().'back-end/assets/style/backend-style.css', array(), time(), true);
+            // engueue stylesheet
+            wp_enqueue_style('frenchweddingstyle-custom-css');
+        }
